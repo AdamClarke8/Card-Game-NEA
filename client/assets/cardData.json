@@ -1,0 +1,22 @@
+{
+  "fireball": {
+    "name": "fireball",
+    "mana": 1,
+    "ability": "Do 2 damage to an enemy monster or the opponent.",
+    "type": "spell"
+  },
+  "elixir": {
+    "name": "elixir",
+    "mana": 3,
+    "ability": "An ally monster gets +3 ATK +3 HP.",
+    "type": "spell"
+  },
+  "duckling": {
+    "name": "duckling",
+    "mana": 1,
+    "ability": "",
+    "type": "monster",
+    "atk": 2,
+    "hp":  2
+  }
+}
