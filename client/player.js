@@ -1,5 +1,5 @@
 import Deck from './deck.js'
-
+import Collection from './collection.js'
 class Player{
     constructor(name) {
         const player = this;
@@ -8,7 +8,7 @@ class Player{
         this.health = 20;
         this.mana = 1;
         this.deck = new Deck(this);
-        //this.collection
+        this.collection = new Collection(this);
     }
     setMana(value) {
         this.mana = value;
