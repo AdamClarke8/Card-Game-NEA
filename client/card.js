@@ -207,7 +207,7 @@ class Card {
         let xOffset = 0;
         let yOffset = -75;
         card.cardIcon = card.scene.add.image(0, yOffset, name);
-        card.cardIcon.setDisplaySize(450, 450);
+        card.cardIcon.setDisplaySize(360, 360);
         card.cardIcon.depth = 2;
 
         card.container.add(card.cardIcon);

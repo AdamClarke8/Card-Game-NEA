@@ -11,10 +11,13 @@ import DeckScene from './deckScene.js'
 import CardDatabase from './cardDatabase.js'
 import Player from "./player.js"
 import Deck from "./deck.js"
+import Collection from "./collection.js"
 import Card from "./card.js"
 import ZoomTexture from './zoomTexture.js'
 
 // Class to define the match scene
+
+
 class MatchScene extends Phaser.Scene {
     constructor() {
         super('match');
@@ -60,21 +63,21 @@ class MatchScene extends Phaser.Scene {
         this.cardDatabase = new CardDatabase(this);
 
         this.player = new Player("Adam");
-        this.player.deck.addCard("fireball", 4);
-        this.player.deck.addCard("duckling", 3);
-        this.player.deck.addCard("elixir", 4);
+        this.player.collection.addCard("fireball", 4);
+        this.player.collection.addCard("duckling", 3);
+        this.player.collection.addCard("elixir", 4);
 
-        this.player.deck.displayDeck();
-        this.player.deck.removeCard("fireball", 1);
-        this.player.deck.displayDeck();
+
+        this.player.collection.displayCollection();
+        //this.player.deck.removeCard("fireball", 1);
+        //this.player.deck.displayDeck();
         // Create a new instance of a zoom texture
         this.rt = new ZoomTexture(this, 400, 300, 800, 600);
 
         // Create new instances of cards
-        //this.card1 = new Card(this, 200, 175, "duckling", 0.25);
-        //this.card2 = new Card(this, 400, 175, "fireball", 0.25);
-        //this.card3 = new Card(this, 600, 175, "elixir", 0.25);
-
+        this.card1 = new Card(this, 200, 175, "duckling", 0.25);
+        this.card2 = new Card(this, 400, 175, "fireball", 0.25);
+        this.card3 = new Card(this, 600, 175, "elixir", 0.25);
         //this.card1.changeCard("duckling");
 
         this.deckButton = this.add.text(400, 400, "GO TO DECK", { color: 'black', fontFamily: 'Pixelated', fontSize: '64px' }).setOrigin(0.5, 0.5);

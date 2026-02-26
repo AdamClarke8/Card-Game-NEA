@@ -8,6 +8,7 @@ class Player{
         this.health = 20;
         this.mana = 1;
         this.deck = new Deck(this);
+        //this.collection
     }
     setMana(value) {
         this.mana = value;
