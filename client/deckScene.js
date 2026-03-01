@@ -14,6 +14,7 @@ import ZoomTexture from './zoomTexture.js'
 class CardBox {
     constructor(scene, x, y, name, val) {
         const cardBox = this;
+
         cardBox.container = scene.add.container(x, y);
 
         cardBox.rect = scene.add.rectangle(0, 0, 200, 50, 0xffffff, 1).setOrigin(0, 0.5);
@@ -30,11 +31,66 @@ class CardBox {
         cardBox.rect.on("pointerdown", () => {
             console.log(`Changed card to ${name}`)
             scene.cardSelector.changeCard(name);
+            scene.selectedCard = name;
         })
         // Allow the card's background to respond to click events
         cardBox.rect.setInteractive();
     }
 }
+class AddCardButton {
+    constructor(scene, x, y) {
+
+        const button = this;
+        button.container = scene.add.container(x, y);
+
+        button.rect = scene.add.rectangle(0, 0, 250, 75, 0x29b6f6, 1).setOrigin(0.5, 0.5);
+        button.rect.setStrokeStyle(2, 0x000000, 1);
+        button.container.add(button.rect);
+
+        button.nameText = scene.add.text(0, 0, "ADD CARD", { color: 'black', fontFamily: 'Pixelated', fontSize: '18px' }).setOrigin(0.5, 0.5);
+        button.container.add(button.nameText);
+
+        // When the button is clicked, add the currently selected card to the player's deck
+        button.rect.on("pointerdown", () => {
+            let name = scene.selectedCard;
+            console.log(`Added card ${name}`)
+            // add the card to deck
+        })
+
+        // Allow the button to respond to click events
+        button.rect.setInteractive();
+        console.log(button.container);
+        console.log("Initialised add card button");
+    }
+}
+
+class RemoveCardButton {
+    constructor(scene, x, y) {
+
+        const button = this;
+        button.container = scene.add.container(x, y);
+
+        button.rect = scene.add.rectangle(0, 0, 250, 75, 0xff0000, 1).setOrigin(0.5, 0.5);
+        button.rect.setStrokeStyle(2, 0x000000, 1);
+        button.container.add(button.rect);
+
+        button.nameText = scene.add.text(0, 0, "REMOVE CARD", { color: 'black', fontFamily: 'Pixelated', fontSize: '18px' }).setOrigin(0.5, 0.5);
+        button.container.add(button.nameText);
+
+        // When the button is clicked, add the currently selected card to the player's deck
+        button.rect.on("pointerdown", () => {
+            let name = scene.selectedCard;
+            console.log(`Removed card ${name}`)
+            // remove the card from deck
+        })
+
+        console.log(button.container);
+        // Allow the button to respond to click events
+        button.rect.setInteractive();
+        console.log("Initialised remove card button");
+    }
+}
+
 class DeckScene extends Phaser.Scene {
     constructor() {
         super('deck');
@@ -73,30 +129,6 @@ class DeckScene extends Phaser.Scene {
         // Create a new instance of a zoom texture
         this.rt = new ZoomTexture(this, 400, 300, 800, 600);
 
-        // Splash text when starting game
-        /*
-        const text = this.add.rexBBCodeText({
-            x: 400,
-            y: 300,
-            text: "DECK SCENE",
-            style: {
-                fontFamily: 'Pixelated',
-                color: 'black',
-                fontSize: '32px',
-                wrap: {
-                    mode: 'word',
-                    width: 800
-                }
-            }
-        }).setOrigin(0.5, 0.5);
-        // Place text at the centre
-
-        var mode = text.style.wrapMode;
-        text.setWrapMode(mode);
-        var width = text.style.wrapWidth;
-        text.setWrapWidth(width);
-        */
-
         this.player = this.registry.get('player');
         console.log(this.player);
 
@@ -109,7 +141,7 @@ class DeckScene extends Phaser.Scene {
 
         const firstCard = Object.keys(collection.cards)[0];
         console.log(firstCard);
-        scene.cardSelector = new Card(scene, 200, 300, firstCard, 0.25);
+        scene.cardSelector = new Card(scene, 200, 200, firstCard, 0.25);
         
 
         for (const cardName in collection.cards) {
@@ -124,29 +156,44 @@ class DeckScene extends Phaser.Scene {
                 //let card = new Card(scene, xOffset + count * 50, 175, cardName, 0.15);
             //}
         }
+
         console.log(boxes);
 
-        const addCardButton = scene.add.rectangle(300, 400, 250, 75, 0x0000ff, 1).setOrigin(0.5, 0.5);
-        addCardButton.setStrokeStyle(2, 0x000000, 1);
+        const addCardButton = new AddCardButton(scene, 450, 400);
 
-        addCardButton.on('pointerdown', () => {
-            console.log("Added card!");
+        const removeCardButton = new RemoveCardButton(scene, 450, 500);
+
+        // Label for collection button
+
+        const collectionIcon = this.add.image(450, 75, 'collection').setOrigin(0.5, 0.5);
+        collectionIcon.setDisplaySize(207, 300);
+        collectionIcon.on("pointerdown", () => {
+            console.log("Switching scene...");
+            this.scene.start("match");
         })
 
-        addCardButton.setInteractive();
+        collectionIcon.setInteractive();
 
-        const removeCardButton = scene.add.rectangle(300, 500, 250, 75, 0xff0000, 1).setOrigin(0.5, 0.5);
-        removeCardButton.setStrokeStyle(2, 0x000000, 1);
+        const collectionText = this.add.rexBBCodeText({
+            x: 450,
+            y: 150,
+            text: "GO TO COLLECTION",
+            style: {
+                fontFamily: 'Pixelated',
+                color: 'black',
+                fontSize: '18px',
+                wrap: {
+                    mode: 'word',
+                    width: 200
+                }
+            }
+        }).setOrigin(0.5, 0.5);
 
-        removeCardButton.on('pointerdown', () => {
-            console.log("Removed card!");
-        })
-
-        removeCardButton.setInteractive();
-
-
+        var mode = collectionText.style.wrapMode;
+        collectionText.setWrapMode(mode);
+        var width = collectionText.style.wrapWidth;
+        collectionText.setWrapWidth(width);
         //this.input.on('pointerdown', () => this.scene.start('match'))*/
-
 
     }
     update() {
