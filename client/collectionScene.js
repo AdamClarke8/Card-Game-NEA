@@ -10,7 +10,7 @@ import Collection from "./collection.js"
 import Card from './card.js'
 import ZoomTexture from './zoomTexture.js'
 
-// Scene that shows when the game starts
+// Scene to display the player's collection
 class CollectionScene extends Phaser.Scene {
     constructor() {
         super('collection');

@@ -5,28 +5,32 @@ class Player{
     constructor(name) {
         const player = this;
 
-        this.name = name;
-        this.health = 20;
-        this.mana = 1;
-        this.deck = new Deck(this);
-        this.collection = new Collection(this);
+        player.name = name;
+        player.health = 20;
+        player.mana = 1;
+        player.deck = new Deck(this);
+        player.collection = new Collection(this);
     }
 
     setMana(value) {
-        this.mana = value;
-        console.log(`Set mana of player ${this.name} to ${value}`);
+        const player = this;
+        player.mana = value;
+        console.log(`Set mana of player ${player.name} to ${value}`);
 
     }
     setHealth(value) {
-        this.health = value;
-        console.log(`Set health of player ${this.name} to ${value}`);
+        const player = this;
+        player.health = value;
+        console.log(`Set health of player ${player.name} to ${value}`);
     }
 
     getMana() {
-        return this.mana;
+        const player = this;
+        return player.mana;
     }
     getHealth() {
-        return this.health
+        const player = this;
+        return player.health
     }
 
     displayPlayer() {

@@ -15,6 +15,8 @@ class CardBox {
     constructor(scene, x, y, name, val) {
         const cardBox = this;
 
+        cardBox.cardCount = val;
+
         cardBox.container = scene.add.container(x, y);
 
         cardBox.rect = scene.add.rectangle(0, 0, 200, 50, 0xffffff, 1).setOrigin(0, 0.5);
@@ -36,7 +38,31 @@ class CardBox {
         // Allow the card's background to respond to click events
         cardBox.rect.setInteractive();
     }
+
+    changeCardCount(val) {
+        const cardBox = this;
+        cardBox.cardCount = val;
+        cardBox.countText.text = `x${cardBox.cardCount}`
+    }
+
+    addToCardCount(val) {
+        const cardBox = this;
+        cardBox.cardCount += val;
+        cardBox.countText.text = `x${cardBox.cardCount}`
+    }
+
+    removeFromCardCount(val) {
+        const cardBox = this;
+        cardBox.cardCount -= val;
+        cardBox.countText.text = `x${cardBox.cardCount}`
+    }
+
+    getCardCount() {
+        const cardBox = this;
+        return cardBox.cardCount;
+    }
 }
+
 class AddCardButton {
     constructor(scene, x, y) {
 
@@ -50,16 +76,32 @@ class AddCardButton {
         button.nameText = scene.add.text(0, 0, "ADD CARD", { color: 'black', fontFamily: 'Pixelated', fontSize: '18px' }).setOrigin(0.5, 0.5);
         button.container.add(button.nameText);
 
-        // When the button is clicked, add the currently selected card to the player's deck
+        // When the button is clicked, add one copy of the currently selected card to the player's deck
         button.rect.on("pointerdown", () => {
             let name = scene.selectedCard;
-            console.log(`Added card ${name}`)
-            // add the card to deck
+            if (name) {
+                const cardBox = scene.cardBoxManager.getCardBox(name);
+                const player = scene.player;
+                if (player.deck.getNumCopies(name) == 4) {
+                    console.log(`Player already has 4 copies of card named ${name} in their deck.`)
+                }
+                else if (cardBox.getCardCount() <= 0) {
+                    console.log(`No more copies of ${name} available in player's collection`)
+                }
+                else {
+                    console.log(`Added card ${name}`)
+                    // add the card to deck
+                    cardBox.removeFromCardCount(1);
+                    scene.player.deck.addCard(name, 1);
+                }
+            }
+            else {
+                console.log("Player hasn't selected a card yet.");
+            }
         })
 
         // Allow the button to respond to click events
         button.rect.setInteractive();
-        console.log(button.container);
         console.log("Initialised add card button");
     }
 }
@@ -77,20 +119,59 @@ class RemoveCardButton {
         button.nameText = scene.add.text(0, 0, "REMOVE CARD", { color: 'black', fontFamily: 'Pixelated', fontSize: '18px' }).setOrigin(0.5, 0.5);
         button.container.add(button.nameText);
 
-        // When the button is clicked, add the currently selected card to the player's deck
+        // When the button is clicked, remove the currently selected card from the player's deck
         button.rect.on("pointerdown", () => {
             let name = scene.selectedCard;
-            console.log(`Removed card ${name}`)
-            // remove the card from deck
+            if (name) {
+                const cardBox = scene.cardBoxManager.getCardBox(name);
+                const player = scene.player;
+                if (player.deck.getNumCopies(name) == 0) {
+                    console.log(`Player has no copies of ${name} in their deck.`)
+                }
+                else {
+                    console.log(`Added card ${name}`)
+                    // remove the card from the deck
+                    cardBox.addToCardCount(1);
+                    scene.player.deck.removeCard(name, 1);
+                }
+            }
+            else {
+                console.log("Player hasn't selected a card yet.");
+            }
         })
 
-        console.log(button.container);
         // Allow the button to respond to click events
         button.rect.setInteractive();
         console.log("Initialised remove card button");
     }
 }
 
+class CardBoxManager {
+    constructor(scene, x, y) {
+        const manager = this;
+
+        manager.scene = scene;
+        manager.x = x;
+        manager.y = y;
+
+        manager.cardBoxList = {};
+        manager.size = 0;
+    }
+
+    addCardBox(cardName, val) {
+        const manager = this;
+        console.log(`Attempting to add card box named ${cardName} with value ${val}`)
+        let box = new CardBox(manager.scene, manager.x, manager.y + (manager.size - 1) * 50, cardName, val);
+        manager.cardBoxList[cardName] = box;
+        manager.size += 1;
+
+    }
+
+    getCardBox(cardName, val) {
+        const manager = this;
+        return manager.cardBoxList[cardName];
+    }
+}
 class DeckScene extends Phaser.Scene {
     constructor() {
         super('deck');
@@ -124,40 +205,49 @@ class DeckScene extends Phaser.Scene {
     }
     create() {
 
-        this.cardDatabase = new CardDatabase(this);
+        const scene = this;
+        scene.cardDatabase = new CardDatabase(scene);
+        /* OLD
+        scene.cardBoxManager = new CardBoxManager(scene);
+        */
+        // NEW
+        scene.cardBoxManager = new CardBoxManager(scene, 600, 75);
 
         // Create a new instance of a zoom texture
-        this.rt = new ZoomTexture(this, 400, 300, 800, 600);
+        scene.rt = new ZoomTexture(scene, 400, 300, 800, 600);
 
-        this.player = this.registry.get('player');
-        console.log(this.player);
+        scene.player = scene.registry.get('player');
 
-        const collection = this.player.collection;
+        const collection = scene.player.collection;
         let xOffset = 100;
         let count = 0;
 
-        const scene = this;
         const boxes = [];
 
         const firstCard = Object.keys(collection.cards)[0];
-        console.log(firstCard);
         scene.cardSelector = new Card(scene, 200, 200, firstCard, 0.25);
         
+        scene.player.deck.setNumCopies("elixir", 0);
+        scene.player.collection.setNumCopies("elixir", 2);
 
         for (const cardName in collection.cards) {
+
+            /* OLD
             count += 1;
             let val = collection.cards[cardName];
             console.log(`Card name is ${cardName}, number is ${val}`);
 
             let box = new CardBox(scene, 600, 25 + (count - 1) * 50, cardName, val);
             boxes.push(box);
-            //for (let i = 0; i < val; i++) {
-                //count += 1;
-                //let card = new Card(scene, xOffset + count * 50, 175, cardName, 0.15);
-            //}
-        }
+            */
 
-        console.log(boxes);
+            // NEW
+
+            let val = collection.cards[cardName];
+            console.log(`Card name is ${cardName}, number is ${val}`);
+            scene.cardBoxManager.addCardBox(cardName, val);
+
+        }
 
         const addCardButton = new AddCardButton(scene, 450, 400);
 
@@ -165,16 +255,17 @@ class DeckScene extends Phaser.Scene {
 
         // Label for collection button
 
-        const collectionIcon = this.add.image(450, 75, 'collection').setOrigin(0.5, 0.5);
+        const collectionIcon = scene.add.image(450, 75, 'collection').setOrigin(0.5, 0.5);
         collectionIcon.setDisplaySize(207, 300);
+
         collectionIcon.on("pointerdown", () => {
             console.log("Switching to collection scene.");
-            this.scene.start("collection");
+            scene.scene.start("collection");
         })
 
         collectionIcon.setInteractive();
 
-        const collectionText = this.add.rexBBCodeText({
+        const collectionText = scene.add.rexBBCodeText({
             x: 450,
             y: 150,
             text: "GO TO COLLECTION",
