@@ -168,8 +168,8 @@ class DeckScene extends Phaser.Scene {
         const collectionIcon = this.add.image(450, 75, 'collection').setOrigin(0.5, 0.5);
         collectionIcon.setDisplaySize(207, 300);
         collectionIcon.on("pointerdown", () => {
-            console.log("Switching scene...");
-            this.scene.start("match");
+            console.log("Switching to collection scene.");
+            this.scene.start("collection");
         })
 
         collectionIcon.setInteractive();

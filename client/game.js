@@ -7,6 +7,7 @@ import BBCodeTextPlugin from 'phaser3-rex-plugins/plugins/bbcodetext-plugin.js';
 
 import PreloadScene from './preloadScene.js'
 import DeckScene from './deckScene.js'
+import CollectionScene from "./collectionScene.js"
 
 import CardDatabase from './cardDatabase.js'
 import Player from "./player.js"
@@ -131,7 +132,7 @@ const config = {
     width: 800,
     height: 600,
     backgroundColor: '0x999999',
-    scene: [PreloadScene, MatchScene, DeckScene],
+    scene: [PreloadScene, MatchScene, DeckScene, CollectionScene],
     plugins: {
         // Custom fonts
         global: [{
