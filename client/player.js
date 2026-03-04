@@ -1,7 +1,7 @@
 import Deck from './deck.js'
 import Collection from './collection.js'
 
-class Player{
+class Player {
     constructor(name) {
         const player = this;
 

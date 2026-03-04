@@ -70,7 +70,7 @@ class MatchScene extends Phaser.Scene {
         this.player.collection.addCard("elixir", 4);
 
         this.player.deck.addCard("fireball", 2);
-        this.player.deck.addCard("duckling", 3);
+        this.player.deck.addCard("duckling", 1);
         this.player.deck.addCard("elixir", 1);
 
         this.player.displayPlayer();

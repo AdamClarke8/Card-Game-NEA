@@ -41,7 +41,10 @@ class Deck {
     }
 
     getNumCopies(name) {
-        return this.cards[name];
+        if (this.cards[name]) {
+            return this.cards[name];
+        }
+        return 0;
     }
 
     displayDeck() {

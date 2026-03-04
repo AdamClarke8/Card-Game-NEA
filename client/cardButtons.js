@@ -1,0 +1,87 @@
+class AddCardButton {
+    constructor(scene, x, y) {
+
+        const button = this;
+        button.container = scene.add.container(x, y);
+
+        button.rect = scene.add.rectangle(0, 0, 250, 75, 0x29b6f6, 1).setOrigin(0.5, 0.5);
+        button.rect.setStrokeStyle(2, 0x000000, 1);
+        button.container.add(button.rect);
+
+        button.nameText = scene.add.text(0, 0, "ADD CARD", { color: 'black', fontFamily: 'Pixelated', fontSize: '18px' }).setOrigin(0.5, 0.5);
+        button.container.add(button.nameText);
+
+        // When the button is clicked, add one copy of the currently selected card to the player's deck
+        button.rect.on("pointerdown", () => {
+            let name = scene.selectedCard;
+            if (name) {
+                const cardBox = scene.cardBoxManager.getCardBox(name);
+                const player = scene.player;
+                if (player.deck.getNumCopies(name) == 4) {
+                    console.log(`Player already has 4 copies of card named ${name} in their deck.`)
+                }
+                else if (cardBox.getCollectionCount() <= 0) {
+                    console.log(`No more copies of ${name} available in player's collection`)
+                }
+                else {
+                    console.log(`Added card ${name}`)
+                    // add the card to deck
+                    cardBox.addToCardCount(1);
+                    scene.player.deck.addCard(name, 1);
+                }
+            }
+            else {
+                console.log("Player hasn't selected a card yet.");
+            }
+        })
+
+        // Allow the button to respond to click events
+        button.rect.setInteractive();
+        console.log("Initialised add card button");
+    }
+}
+
+class RemoveCardButton {
+    constructor(scene, x, y) {
+
+        const button = this;
+        button.container = scene.add.container(x, y);
+
+        button.rect = scene.add.rectangle(0, 0, 250, 75, 0xff0000, 1).setOrigin(0.5, 0.5);
+        button.rect.setStrokeStyle(2, 0x000000, 1);
+        button.container.add(button.rect);
+
+        button.nameText = scene.add.text(0, 0, "REMOVE CARD", { color: 'black', fontFamily: 'Pixelated', fontSize: '18px' }).setOrigin(0.5, 0.5);
+        button.container.add(button.nameText);
+
+        // When the button is clicked, remove the currently selected card from the player's deck
+        button.rect.on("pointerdown", () => {
+            let name = scene.selectedCard;
+            if (name) {
+                const cardBox = scene.cardBoxManager.getCardBox(name);
+                const player = scene.player;
+                if (player.deck.getNumCopies(name) == 0) {
+                    console.log(`Player has no copies of ${name} in their deck.`)
+                }
+                else {
+                    console.log(`Added card ${name}`)
+                    // remove the card from the deck
+                    cardBox.removeFromCardCount(1);
+                    scene.player.deck.removeCard(name, 1);
+                }
+            }
+            else {
+                console.log("Player hasn't selected a card yet.");
+            }
+        })
+
+        // Allow the button to respond to click events
+        button.rect.setInteractive();
+        console.log("Initialised remove card button");
+    }
+}
+
+export {
+    AddCardButton,
+    RemoveCardButton
+}
