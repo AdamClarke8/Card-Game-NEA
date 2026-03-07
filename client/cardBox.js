@@ -47,6 +47,9 @@ class CardBox {
         cardBox.rect.setInteractive();
     }
 
+    sortBoxes() {
+
+    }
     changeCardCount(val) {
         const cardBox = this;
         cardBox.deckCount = val;

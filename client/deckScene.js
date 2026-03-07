@@ -19,6 +19,10 @@ import {
     RemoveCardButton
 } from "./cardButtons.js"
 
+import {
+    sortByMana
+} from "./misc.js"
+
 // Scene which displays the user's collection
 
 class DeckScene extends Phaser.Scene {
@@ -80,23 +84,46 @@ class DeckScene extends Phaser.Scene {
         scene.player.deck.setNumCopies("elixir", 0);
         scene.player.collection.setNumCopies("elixir", 2);
 
+        scene.player.displayPlayer();
 
-        for (const cardName in collection.cards) {
+        const cardNames = Object.keys(collection.cards);
+        console.log(cardNames);
 
-            /*
-            //let collectionCount = collection.cards[cardName];
-            let deckCount = deck.cards[cardName]
-            if (!deckCount) {
-                deckCount = 0;
+        const cardList1 = [];
+        const cardList2 = [];
+
+        cardNames.forEach((cardName) => {
+            if (scene.player.deck.getNumCopies(cardName) > 0) {
+                cardList1.push(cardName);
             }
-            console.log(`Card name is ${cardName}, collection count is ${collectionCount}, deck count is ${deckCount}`);
-            */
+            else {
+                cardList2.push(cardName);
+            }
+        })
+
+        console.log(cardList1);
+        console.log(cardList2);
+
+        // Sort cards by ascending mana
+        sortByMana(cardList1, scene.cardDatabase);
+        sortByMana(cardList2, scene.cardDatabase);
+
+        const newCardList = cardList1.concat(cardList2);
+        console.log(newCardList);
+
+        newCardList.forEach((cardName) => {
+            console.log(`Card name is ${cardName}`)
+            scene.cardBoxManager.addCardBox(cardName);
+
+        })
+        /*
+        for (const cardName in cardNames) {
 
             console.log(`Card name is ${cardName}`)
             scene.cardBoxManager.addCardBox(cardName);
 
         }
-
+        */
         const addCardButton = new AddCardButton(scene, 450, 400);
 
         const removeCardButton = new RemoveCardButton(scene, 450, 500);

@@ -18,13 +18,13 @@ class AddCardButton {
                 const cardBox = scene.cardBoxManager.getCardBox(name);
                 const player = scene.player;
                 if (player.deck.getNumCopies(name) == 4) {
-                    console.log(`Player already has 4 copies of card named ${name} in their deck.`)
+                    console.log(`Player named ${player.name} already has 4 copies of card named ${name} in their deck.`)
                 }
                 else if (cardBox.getCollectionCount() <= 0) {
-                    console.log(`No more copies of ${name} available in player's collection`)
+                    console.log(`No more copies of card named ${name} available in collection of player named ${player.name}`)
                 }
                 else {
-                    console.log(`Added card ${name}`)
+                    console.log(`Added 1 of card named ${name} to deck count of card box of ${player.name}`)
                     // add the card to deck
                     cardBox.addToCardCount(1);
                     scene.player.deck.addCard(name, 1);
@@ -64,7 +64,7 @@ class RemoveCardButton {
                     console.log(`Player has no copies of ${name} in their deck.`)
                 }
                 else {
-                    console.log(`Added card ${name}`)
+                    console.log(`Removed 1 of card named ${name} from deck count of card box of ${player.name}`)
                     // remove the card from the deck
                     cardBox.removeFromCardCount(1);
                     scene.player.deck.removeCard(name, 1);
