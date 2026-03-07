@@ -101,12 +101,13 @@ class DeckScene extends Phaser.Scene {
             }
         })
 
-        console.log(cardList1);
-        console.log(cardList2);
 
         // Sort cards by ascending mana
         sortByMana(cardList1, scene.cardDatabase);
         sortByMana(cardList2, scene.cardDatabase);
+
+        console.log(cardList1);
+        console.log(cardList2);
 
         const newCardList = cardList1.concat(cardList2);
         console.log(newCardList);

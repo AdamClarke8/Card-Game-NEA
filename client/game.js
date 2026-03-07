@@ -68,6 +68,10 @@ class MatchScene extends Phaser.Scene {
         this.player.collection.addCard("fireball", 4);
         this.player.collection.addCard("duckling", 3);
         this.player.collection.addCard("elixir", 4);
+        this.player.collection.addCard("pizza", 5);
+        this.player.collection.addCard("moai", 2);
+        this.player.collection.addCard("octopus", 8);
+        this.player.collection.addCard("goldfish", 3);
 
         this.player.deck.addCard("fireball", 2);
         this.player.deck.addCard("duckling", 1);

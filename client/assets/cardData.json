@@ -17,6 +17,36 @@
     "ability": "",
     "type": "monster",
     "atk": 2,
-    "hp":  2
+    "hp": 2
+  },
+  "pizza": {
+    "name": "pizza",
+    "mana": 2,
+    "ability": "An ally Monster gets +3 ATK +1 HP.",
+    "type": "spell"
+  },
+  "moai": {
+    "name": "moai",
+    "mana": 5,
+    "ability": "When played: All ally Monsters get +1 ATK +1 HP.",
+    "type": "monster",
+    "atk": 3,
+    "hp": 4
+  },
+  "octopus": {
+    "name": "octopus",
+    "mana": 3,
+    "ability": "When played: An enemy Monster gets -2 ATK -1 HP",
+    "type": "monster",
+    "atk": 2,
+    "hp": 3
+  },
+  "goldfish": {
+    "name": "goldfish",
+    "mana": 2,
+    "ability": "When played: Draw a card",
+    "type": "monster",
+    "atk": 1,
+    "hp": 2
   }
 }

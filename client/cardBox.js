@@ -18,7 +18,13 @@ class CardBox {
         cardBox.collectionCountText = scene.add.text(160, 0, `x${cardBox.collectionCount}`, { color: 'gray', fontFamily: 'Pixelated', fontSize: '12px' }).setOrigin(0, 0.5);
         cardBox.container.add(cardBox.collectionCountText);
 
-        cardBox.deckCountText = scene.add.text(120, 0, `x${cardBox.deckCount}`, { color: 'black', fontFamily: 'Pixelated', fontSize: '12px' }).setOrigin(0, 0.5);
+        if (cardBox.deckCount == 0) {
+            cardBox.deckCountText = scene.add.text(120, 0, "", { color: 'green', fontFamily: 'Pixelated', fontSize: '12px' }).setOrigin(0, 0.5);
+        }
+        else {
+            cardBox.deckCountText = scene.add.text(120, 0, `x${cardBox.deckCount}`, { color: 'green', fontFamily: 'Pixelated', fontSize: '12px' }).setOrigin(0, 0.5);
+        }
+
         cardBox.container.add(cardBox.deckCountText);
 
         // When this card is clicked while hidden, show its ability
@@ -55,7 +61,12 @@ class CardBox {
         cardBox.deckCount = val;
         cardBox.collectionCount = cardBox.deckCount - val;
         cardBox.collectionCountText.text = `x${cardBox.collectionCount}`
-        cardBox.deckCountText.text = `x${cardBox.deckCount}`
+        if (cardBox.deckCount == 0) {
+            cardBox.deckCountText.text = ""
+        }
+        else {
+            cardBox.deckCountText.text = `x${cardBox.deckCount}`
+        }
     }
 
     addToCardCount(val) {
@@ -71,7 +82,12 @@ class CardBox {
         cardBox.deckCount -= val;
         cardBox.collectionCount += val;
         cardBox.collectionCountText.text = `x${cardBox.collectionCount}`
-        cardBox.deckCountText.text = `x${cardBox.deckCount}`
+        if (cardBox.deckCount == 0) {
+            cardBox.deckCountText.text = ""
+        }
+        else {
+            cardBox.deckCountText.text = `x${cardBox.deckCount}`
+        }
     }
 
     getDeckCount() {
