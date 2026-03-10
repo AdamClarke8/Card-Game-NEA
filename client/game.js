@@ -8,6 +8,7 @@ import BBCodeTextPlugin from 'phaser3-rex-plugins/plugins/bbcodetext-plugin.js';
 import PreloadScene from './preloadScene.js'
 import DeckScene from './deckScene.js'
 import CollectionScene from "./collectionScene.js"
+import MatchScene from "./matchScene.js"
 
 import CardDatabase from './cardDatabase.js'
 import Player from "./player.js"
@@ -19,9 +20,9 @@ import ZoomTexture from './zoomTexture.js'
 // Class to define the match scene
 
 
-class MatchScene extends Phaser.Scene {
+class HomeScene extends Phaser.Scene {
     constructor() {
-        super('match');
+        super('home');
     }
 
     init() {
@@ -106,12 +107,14 @@ class MatchScene extends Phaser.Scene {
         this.rt = new ZoomTexture(this, 400, 300, 800, 600);
 
         // Create new instances of cards
-        this.card1 = new Card(this, 200, 175, "duckling", 0.25);
-        this.card2 = new Card(this, 400, 175, "fireball", 0.25);
-        this.card3 = new Card(this, 600, 175, "elixir", 0.25);
+        //this.card1 = new Card(this, 200, 175, "duckling", 0.25);
+        //this.card2 = new Card(this, 400, 175, "fireball", 0.25);
+        //this.card3 = new Card(this, 600, 175, "elixir", 0.25);
         //this.card1.changeCard("duckling");
 
-        this.deckButton = this.add.text(400, 400, "GO TO DECK", { color: 'black', fontFamily: 'Pixelated', fontSize: '64px' }).setOrigin(0.5, 0.5);
+        this.deckButton = this.add.text(400, 200, "GO TO DECK", { color: 'black', fontFamily: 'Pixelated', fontSize: '48px' }).setOrigin(0.5, 0.5);
+
+        this.matchButton = this.add.text(400, 400, "START MATCH", { color: 'black', fontFamily: 'Pixelated', fontSize: '48px' }).setOrigin(0.5, 0.5);
 
         // When deck button is clicked, switch to deck scene
         this.deckButton.on("pointerdown", () => {
@@ -120,6 +123,14 @@ class MatchScene extends Phaser.Scene {
 
         // Allow deck button to respond to click events
         this.deckButton.setInteractive();
+
+        // When match button is clicked, switch to match scene
+        this.matchButton.on("pointerdown", () => {
+            scene.scene.start('match');
+        })
+
+        // Allow match button to respond to click events
+        this.matchButton.setInteractive();
 
         this.registry.set('player', this.player)
     }
@@ -136,7 +147,7 @@ const config = {
     width: 800,
     height: 600,
     backgroundColor: '0x999999',
-    scene: [PreloadScene, MatchScene, DeckScene, CollectionScene],
+    scene: [PreloadScene, HomeScene, MatchScene, DeckScene, CollectionScene],
     plugins: {
         // Custom fonts
         global: [{

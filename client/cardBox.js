@@ -1,9 +1,15 @@
+import {
+    sortCardList
+} from "./misc.js"
+
 class CardBox {
-    constructor(scene, x, y, name) {
+    constructor(scene, x, y, name, manager) {
         const cardBox = this;
-        const player = scene.player;
-        cardBox.deckCount = player.deck.getNumCopies(name);
-        cardBox.collectionCount = player.collection.getNumCopies(name) - cardBox.deckCount;
+        cardBox.scene = scene;
+        cardBox.manager = manager;
+
+        cardBox.deckCount = scene.player.deck.getNumCopies(name);
+        cardBox.collectionCount = scene.player.collection.getNumCopies(name) - cardBox.deckCount;
 
         cardBox.container = scene.add.container(x, y);
 
@@ -32,9 +38,7 @@ class CardBox {
             if (scene.selectedCard != name) {
                 if (scene.selectedCard) {
                     let prevCardName = scene.selectedCard;
-                    console.log(prevCardName);
                     let prevCardBox = scene.cardBoxManager.getCardBox(prevCardName);
-                    console.log(prevCardBox);
                     prevCardBox.rect.setStrokeStyle(2, 0x000000, 1);
                 }
                 console.log(`Changed card to ${name}`);
@@ -53,9 +57,6 @@ class CardBox {
         cardBox.rect.setInteractive();
     }
 
-    sortBoxes() {
-
-    }
     changeCardCount(val) {
         const cardBox = this;
         cardBox.deckCount = val;
@@ -67,6 +68,7 @@ class CardBox {
         else {
             cardBox.deckCountText.text = `x${cardBox.deckCount}`
         }
+        cardBox.manager.sortBoxes();
     }
 
     addToCardCount(val) {
@@ -75,6 +77,7 @@ class CardBox {
         cardBox.collectionCount -= val;
         cardBox.collectionCountText.text = `x${cardBox.collectionCount}`
         cardBox.deckCountText.text = `x${cardBox.deckCount}`
+        cardBox.manager.sortBoxes();
     }
 
     removeFromCardCount(val) {
@@ -88,6 +91,7 @@ class CardBox {
         else {
             cardBox.deckCountText.text = `x${cardBox.deckCount}`
         }
+        cardBox.manager.sortBoxes();
     }
 
     getDeckCount() {
@@ -104,6 +108,7 @@ class CardBox {
 class CardBoxManager {
     constructor(scene, x, y) {
         const manager = this;
+        manager.scene = scene;
 
         manager.scene = scene;
         manager.x = x;
@@ -116,7 +121,7 @@ class CardBoxManager {
     addCardBox(cardName, collectionCount, deckCount) {
         const manager = this;
         console.log(`Creating card box named ${cardName} with collection count ${collectionCount} and deck count ${deckCount}`)
-        let box = new CardBox(manager.scene, manager.x, manager.y + (manager.size - 1) * 50, cardName, collectionCount, deckCount);
+        let box = new CardBox(manager.scene, manager.x, manager.y + (manager.size - 1) * 50, cardName, manager);
         manager.cardBoxList[cardName] = box;
         manager.size += 1;
 
@@ -125,6 +130,20 @@ class CardBoxManager {
     getCardBox(cardName) {
         const manager = this;
         return manager.cardBoxList[cardName];
+    }
+
+    sortBoxes() {
+        const manager = this;
+        const cardNames = Object.keys(manager.cardBoxList);
+        const newCardList = sortCardList(manager.scene.player, cardNames, manager.scene.cardDatabase);
+
+        manager.size = 0;
+        newCardList.forEach((cardName) => {
+            manager.cardBoxList[cardName].container.y = manager.y + (manager.size - 1) * 50;
+            manager.size += 1;
+        })
+
+        console.log("Sorted card boxes.")
     }
 }
 

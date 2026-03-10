@@ -26,8 +26,8 @@ class AddCardButton {
                 else {
                     console.log(`Added 1 of card named ${name} to deck count of card box of ${player.name}`)
                     // add the card to deck
-                    cardBox.addToCardCount(1);
                     scene.player.deck.addCard(name, 1);
+                    cardBox.addToCardCount(1);
                 }
             }
             else {
@@ -66,8 +66,8 @@ class RemoveCardButton {
                 else {
                     console.log(`Removed 1 of card named ${name} from deck count of card box of ${player.name}`)
                     // remove the card from the deck
-                    cardBox.removeFromCardCount(1);
                     scene.player.deck.removeCard(name, 1);
+                    cardBox.removeFromCardCount(1);
                 }
             }
             else {

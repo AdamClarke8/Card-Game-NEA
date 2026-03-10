@@ -35,7 +35,7 @@ class PreloadScene extends Phaser.Scene {
         var width = text.style.wrapWidth;
         text.setWrapWidth(width);
 
-        this.input.on('pointerdown', () => this.scene.start('match'))
+        this.input.on('pointerdown', () => this.scene.start('home'))
     }
 }
 

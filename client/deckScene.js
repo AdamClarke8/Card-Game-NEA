@@ -20,7 +20,8 @@ import {
 } from "./cardButtons.js"
 
 import {
-    sortByMana
+    sortByMana,
+    sortCardList
 } from "./misc.js"
 
 // Scene which displays the user's collection
@@ -82,6 +83,8 @@ class DeckScene extends Phaser.Scene {
         scene.cardSelector = new Card(scene, 200, 200, firstCard, 0.25);
 
         scene.player.deck.setNumCopies("elixir", 0);
+        scene.player.deck.setNumCopies("fireball", 0);
+        scene.player.deck.setNumCopies("duckling", 0);
         scene.player.collection.setNumCopies("elixir", 2);
 
         scene.player.displayPlayer();
@@ -89,28 +92,7 @@ class DeckScene extends Phaser.Scene {
         const cardNames = Object.keys(collection.cards);
         console.log(cardNames);
 
-        const cardList1 = [];
-        const cardList2 = [];
-
-        cardNames.forEach((cardName) => {
-            if (scene.player.deck.getNumCopies(cardName) > 0) {
-                cardList1.push(cardName);
-            }
-            else {
-                cardList2.push(cardName);
-            }
-        })
-
-
-        // Sort cards by ascending mana
-        sortByMana(cardList1, scene.cardDatabase);
-        sortByMana(cardList2, scene.cardDatabase);
-
-        console.log(cardList1);
-        console.log(cardList2);
-
-        const newCardList = cardList1.concat(cardList2);
-        console.log(newCardList);
+        const newCardList = sortCardList(scene.player, cardNames, scene.cardDatabase);
 
         newCardList.forEach((cardName) => {
             console.log(`Card name is ${cardName}`)
@@ -162,6 +144,13 @@ class DeckScene extends Phaser.Scene {
         collectionText.setWrapWidth(width);
         //this.input.on('pointerdown', () => this.scene.start('match'))*/
 
+        this.backButton = this.add.text(175, 450, "BACK", { color: 'black', fontFamily: 'Pixelated', fontSize: '48px' }).setOrigin(0.5, 0.5);
+        this.backButton.on("pointerdown", () => {
+            scene.scene.start('home');
+        })
+
+        // Allow home button to respond to click events
+        this.backButton.setInteractive();
     }
     update() {
 
