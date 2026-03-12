@@ -38,7 +38,7 @@ class ZoomTexture {
         // Update position of the card's container
         card.updateContainer();
 
-        card.container.setScale(card.scale * 1.5);
+        card.container.setScale(0.35);
         // Draw the container to the render texture as an image
         rt.rt.draw(card.container);
         // Bring the render texture to the front (highest priority for click events)
@@ -61,7 +61,7 @@ class ZoomTexture {
         if (card != null) {
 
             const card = this.card;
-
+            
             card.container.setScale(card.scale);
             card.container.visible = true;
             rt.rt.clear();

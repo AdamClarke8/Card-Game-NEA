@@ -10,6 +10,8 @@ import Collection from "./collection.js"
 import Card from './card.js'
 import ZoomTexture from './zoomTexture.js'
 
+import CardSlot from './cardSlot.js'
+
 // Scene to display the player's collection
 class MatchScene extends Phaser.Scene {
     constructor() {
@@ -44,6 +46,34 @@ class MatchScene extends Phaser.Scene {
     }
     create() {
 
+        const scene = this;
+
+        scene.cardDatabase = new CardDatabase(scene);
+        // Create a new instance of a zoom texture
+        scene.rt = new ZoomTexture(this, 400, 300, 800, 600);
+
+        const card = new Card(scene, 100, 200, "duckling", 0.125);
+
+        const blueCardSlotVertices = [[100, 200], [250, 200], [400, 200], [550, 200], [700, 200]];
+        const redCardSlotVertices = [[100, 400], [250, 400], [400, 400], [550, 400], [700, 400]];
+
+        const cardSlots = [];
+
+        for (let i = 0; i < blueCardSlotVertices.length; i++) {
+            let vertex = blueCardSlotVertices[i];
+            console.log(`Creating blue side vertex at: ${vertex}`);
+            let cardSlot = new CardSlot(vertex[0], vertex[1], scene);
+            cardSlots.push(cardSlot);
+        }
+
+        for (let i = 0; i < redCardSlotVertices.length; i++) {
+            let vertex = redCardSlotVertices[i];
+            console.log(`Creating red side vertex at: ${vertex}`);
+            let cardSlot = new CardSlot(vertex[0], vertex[1], scene);
+            cardSlots.push(cardSlot);
+        }
+
+        /*
         // Splash text when starting game
         const text = this.add.rexBBCodeText({
             x: 400,
@@ -65,6 +95,8 @@ class MatchScene extends Phaser.Scene {
         text.setWrapMode(mode);
         var width = text.style.wrapWidth;
         text.setWrapWidth(width);
+        */
+        
 
     }
     update() {

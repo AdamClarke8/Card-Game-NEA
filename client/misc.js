@@ -2,7 +2,7 @@
 /*
 function sortByMana(arr, db) {
     // Get time in milliseconds before execution
-    let startTime = performance.now();
+    //let startTime = performance.now();
 
     for (let i = 0; i < arr.length - 1; i++) {
         for (let j = 0; j < arr.length - 1 - i; j++) {
@@ -22,7 +22,7 @@ function sortByMana(arr, db) {
 
     let executionTime = endTime - startTime;
     db.scene.times.push(executionTime);
-    console.log(`Times: ${db.scene.times}`);
+    //console.log(`Times: ${db.scene.times}`);
 
     // Calculate mean time to execute
     let sum = 0;
@@ -31,17 +31,19 @@ function sortByMana(arr, db) {
     });
 
     let size = db.scene.times.length;
-    console.log(`Mean Time: ${sum / size}`);
+    //console.log(`Mean Time: ${sum / size}`);
     return arr;
-}*/
+}
+*/
 
 // NEW
+
 function sortByMana(arr, db) {
     // Using insertion sort instead of bubble sort
-    console.log("Attempting to sort by mana.");
+    //console.log("Attempting to sort by mana.");
 
     // Get time in milliseconds before execution
-    let startTime = performance.now();
+    //let startTime = performance.now();
 
     for (let i = 0; i < arr.length - 1; i++) {
         for (let j = i; j >= 0; j--) {
@@ -55,6 +57,7 @@ function sortByMana(arr, db) {
         }
         console.log(`Array: ${arr}`);
     }
+    /*
     // Get time in milliseconds after execution
     let endTime = performance.now();
 
@@ -70,7 +73,7 @@ function sortByMana(arr, db) {
 
     let size = db.scene.times.length;
     console.log(`Mean Time: ${sum / size}`);
-
+    */
     return arr;
 }
 
