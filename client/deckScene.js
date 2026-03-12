@@ -64,6 +64,7 @@ class DeckScene extends Phaser.Scene {
 
         // Initialise card database
         scene.cardDatabase = new CardDatabase(scene);
+        scene.times = [];
         // Initialise card box manager
         scene.cardBoxManager = new CardBoxManager(scene, 600, 75);
 
