@@ -18,6 +18,7 @@ class Deck {
             this.cards[name] += count;
         }
         console.log(`Added ${count} copies of card named ${name} to deck of ${this.player.name}`)
+        this.size += count;
     }
 
     removeCard(name, count = 1) {
@@ -32,12 +33,16 @@ class Deck {
         else {
             this.cards[name] -= count;
         }
+        this.size -= count;
         console.log(`Removed ${count} copies of card named ${name} from deck of ${this.player.name}`)
     }
 
     setNumCopies(name, count) {
+        let diff = (count - this.cards[name]);
+        this.size += diff;
         this.cards[name] = count;
         console.log(`Set copies of card named ${name} in deck of ${this.player.name} to ${count}`)
+
     }
 
     getNumCopies(name) {

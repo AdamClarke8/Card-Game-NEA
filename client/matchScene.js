@@ -11,6 +11,7 @@ import Card from './card.js'
 import ZoomTexture from './zoomTexture.js'
 
 import CardSlot from './cardSlot.js'
+import Hand from './hand.js'
 
 // Scene to display the player's collection
 class MatchScene extends Phaser.Scene {
@@ -48,6 +49,14 @@ class MatchScene extends Phaser.Scene {
 
         const scene = this;
 
+        scene.player = scene.registry.get('player');
+        const collection = scene.player.collection;
+        const deck = scene.player.deck;
+        scene.player.initTempDeck();
+
+        console.log("Displaying deck...");
+        deck.displayDeck();
+        // Initialise card database
         scene.cardDatabase = new CardDatabase(scene);
         // Create a new instance of a zoom texture
         scene.rt = new ZoomTexture(this, 400, 300, 800, 600);
@@ -73,6 +82,21 @@ class MatchScene extends Phaser.Scene {
             cardSlots.push(cardSlot);
         }
 
+        const hand = new Hand(scene, scene.player);
+        hand.updateHandDisplay();
+        /*
+        const cardsInHand = [];
+
+        let count = 0;
+        let cardNames = Object.keys(deck.cards);
+
+        cardNames.forEach((cardName) => {
+            count += 1;
+            
+            let card = new Card(scene, 100 + count * 50, 550, cardName, 0.2);
+            cardsInHand.push(card);
+        })*/
+
         /*
         // Splash text when starting game
         const text = this.add.rexBBCodeText({
@@ -97,7 +121,11 @@ class MatchScene extends Phaser.Scene {
         text.setWrapWidth(width);
         */
         
-
+        this.backButton = this.add.text(400, 100, "BACK", { color: 'black', fontFamily: 'Pixelated', fontSize: '48px' }).setOrigin(0.5, 0.5);
+        this.backButton.on("pointerdown", () => {
+            scene.scene.start('home');
+        })
+        this.backButton.setInteractive();
     }
     update() {
 

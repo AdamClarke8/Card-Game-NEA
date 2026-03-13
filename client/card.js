@@ -11,6 +11,7 @@ class Card {
         const card = this;
         card.scene = scene;
         card.cardData = scene.cardDatabase.data;
+        card.cardName = cardName;
 
         // Create container to store all card elements
         card.container = scene.add.container(x, y);

@@ -1,4 +1,5 @@
 import Deck from './deck.js'
+import TempDeck from './tempDeck.js'
 import Collection from './collection.js'
 
 class Player {
@@ -43,6 +44,16 @@ class Player {
         player.collection.displayCollection();
         player.deck.displayDeck();
 
+    }
+
+    initTempDeck() {
+        const player = this;
+        // Create a shallow copy (by value, not by reference)
+        player.tempDeck = new TempDeck(player);
+        console.log(`Initialised temp deck of player named ${player.name}`);
+        player.tempDeck.displayDeck();
+
+        
     }
 }
 

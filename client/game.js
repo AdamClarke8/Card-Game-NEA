@@ -23,10 +23,10 @@ import ZoomTexture from './zoomTexture.js'
 class HomeScene extends Phaser.Scene {
     constructor() {
         super('home');
+        this.timesVisited = 0;
     }
 
     init() {
-
     }
 
     preload() {
@@ -64,44 +64,52 @@ class HomeScene extends Phaser.Scene {
 
         this.cardDatabase = new CardDatabase(this);
 
-        this.player = new Player("ExampleName");
+        // Only execute this if the scene has been visited once
+        scene.timesVisited += 1;
+        if (scene.timesVisited == 1) {
+            console.log("Generating initial deck"); this.player = new Player("ExampleName");
 
-        this.player.collection.addCard("fireball", 4);
-        this.player.collection.addCard("duckling", 3);
-        this.player.collection.addCard("elixir", 4);
-        this.player.collection.addCard("pizza", 5);
-        this.player.collection.addCard("moai", 2);
-        this.player.collection.addCard("octopus", 8);
-        this.player.collection.addCard("goldfish", 3);
+            this.player.collection.addCard("fireball", 4);
+            this.player.collection.addCard("duckling", 3);
+            this.player.collection.addCard("elixir", 4);
+            this.player.collection.addCard("pizza", 5);
+            this.player.collection.addCard("moai", 2);
+            this.player.collection.addCard("octopus", 8);
+            this.player.collection.addCard("goldfish", 3);
 
-        this.player.deck.addCard("fireball", 2);
-        this.player.deck.addCard("duckling", 1);
-        this.player.deck.addCard("elixir", 1);
+            this.player.deck.addCard("fireball", 2);
+            this.player.deck.addCard("duckling", 1);
+            this.player.deck.addCard("elixir", 1);
 
-        this.player.displayPlayer();
+            this.player.displayPlayer();
 
-        this.player.setMana(3);
-        this.player.setHealth(15);
-        console.log(`New mana: ${this.player.getMana()}`);
-        console.log(`New health: ${this.player.getMana()}`);
+            this.player.setMana(3);
+            this.player.setHealth(15);
+            console.log(`New mana: ${this.player.getMana()}`);
+            console.log(`New health: ${this.player.getMana()}`);
 
-        this.player.collection.removeCard("duckling", 1);
-        let numCopies1 = this.player.collection.getNumCopies("duckling");
-        console.log(`Number of copies of Duckling in collection: ${numCopies1}`);
+            this.player.collection.removeCard("duckling", 1);
+            let numCopies1 = this.player.collection.getNumCopies("duckling");
+            console.log(`Number of copies of Duckling in collection: ${numCopies1}`);
 
-        this.player.deck.removeCard("fireball", 1);
-        let numCopies2 = this.player.deck.getNumCopies("fireball");
-        console.log(`Number of copies of Fireball in deck: ${numCopies2}`);
-        
+            this.player.deck.removeCard("fireball", 1);
+            let numCopies2 = this.player.deck.getNumCopies("fireball");
+            console.log(`Number of copies of Fireball in deck: ${numCopies2}`);
 
-        this.player.collection.setNumCopies("fireball", 7);
-        let numCopies3 = this.player.collection.getNumCopies("fireball");
-        console.log(`Number of copies of Fireball in collection: ${numCopies3}`);
 
-        this.player.deck.setNumCopies("elixir", 2);
-        let numCopies4 = this.player.deck.getNumCopies("elixir");
-        console.log(`Number of copies of Elixir in deck: ${numCopies4}`);
+            this.player.collection.setNumCopies("fireball", 7);
+            let numCopies3 = this.player.collection.getNumCopies("fireball");
+            console.log(`Number of copies of Fireball in collection: ${numCopies3}`);
 
+            this.player.deck.setNumCopies("elixir", 2);
+            let numCopies4 = this.player.deck.getNumCopies("elixir");
+            console.log(`Number of copies of Elixir in deck: ${numCopies4}`);
+
+            this.player.deck.setNumCopies("elixir", 0);
+            this.player.deck.setNumCopies("fireball", 0);
+            this.player.deck.setNumCopies("duckling", 0);
+            this.player.collection.setNumCopies("elixir", 2);
+        }
 
         // Create a new instance of a zoom texture
         this.rt = new ZoomTexture(this, 400, 300, 800, 600);

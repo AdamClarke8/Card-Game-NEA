@@ -62,12 +62,12 @@ class DeckScene extends Phaser.Scene {
         const scene = this;
         scene.player = scene.registry.get('player');
 
-        // Initialise card database
-        scene.cardDatabase = new CardDatabase(scene);
         scene.times = [];
         // Initialise card box manager
         scene.cardBoxManager = new CardBoxManager(scene, 600, 75);
 
+        // Initialise card database
+        scene.cardDatabase = new CardDatabase(scene);
         // Create a new instance of a zoom texture
         scene.rt = new ZoomTexture(scene, 400, 300, 800, 600);
 
@@ -82,11 +82,6 @@ class DeckScene extends Phaser.Scene {
 
         const firstCard = Object.keys(collection.cards)[0];
         scene.cardSelector = new Card(scene, 200, 200, firstCard, 0.25);
-
-        scene.player.deck.setNumCopies("elixir", 0);
-        scene.player.deck.setNumCopies("fireball", 0);
-        scene.player.deck.setNumCopies("duckling", 0);
-        scene.player.collection.setNumCopies("elixir", 2);
 
         scene.player.displayPlayer();
 
