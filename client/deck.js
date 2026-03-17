@@ -34,6 +34,7 @@ class Deck {
             this.cards[name] -= count;
         }
         this.size -= count;
+        
         console.log(`Removed ${count} copies of card named ${name} from deck of ${this.player.name}`)
     }
 

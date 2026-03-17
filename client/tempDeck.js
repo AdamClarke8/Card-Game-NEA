@@ -1,4 +1,7 @@
 import Deck from './deck.js';
+import {
+    getRandomInt
+} from './misc.js'
 
 class TempDeck extends Deck {
     constructor(player) {
@@ -19,6 +22,36 @@ class TempDeck extends Deck {
             console.log(`${key}: ${val}`);
         }
         console.log(`\n`)
+    }
+
+    draw() {
+        const tempDeck = this;
+
+        let size = tempDeck.size;
+        if (!size) {
+            throw "No cards in the deck left to draw!"
+        }
+
+        let randNum = getRandomInt(0, size);
+        console.log(`Random number is: ${randNum}`)
+        let cardNames = Object.keys(tempDeck.cards);
+        let count = 0;
+
+        for (let i = 0; i < cardNames.length; i++) {
+            let cardName = cardNames[i];
+            let numCopies = tempDeck.cards[cardName];
+            console.log(`Number of copies of ${cardName} is ${numCopies}`);
+            count += numCopies;
+            if (count > randNum) {
+                console.log("Found card!");
+                var chosenCardName = cardName;
+                break;
+            }
+        }
+
+        console.log(`Drew card named ${chosenCardName}`)
+        tempDeck.removeCard(chosenCardName);
+        return chosenCardName;
     }
 }
 

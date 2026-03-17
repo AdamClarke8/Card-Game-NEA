@@ -59,7 +59,6 @@ class HomeScene extends Phaser.Scene {
     }
     
     create() {
-
         const scene = this;
 
         this.cardDatabase = new CardDatabase(this);

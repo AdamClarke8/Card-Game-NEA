@@ -104,7 +104,13 @@ function sortCardList(player, cardNames, db) {
     return newCardList;
 }
 
+function getRandomInt(min, max) {
+    let range = max - min;
+    return Math.floor(min + Math.random() * range);
+}
+
 export {
     sortByMana,
-    sortCardList
+    sortCardList,
+    getRandomInt
 }

@@ -17,6 +17,7 @@ import Hand from './hand.js'
 class MatchScene extends Phaser.Scene {
     constructor() {
         super('match');
+
     }
     preload() {
 
@@ -46,7 +47,6 @@ class MatchScene extends Phaser.Scene {
         this.load.font('Pixelated', fontPixelated, 'woff2');
     }
     create() {
-
         const scene = this;
 
         scene.player = scene.registry.get('player');
@@ -83,7 +83,9 @@ class MatchScene extends Phaser.Scene {
         }
 
         const hand = new Hand(scene, scene.player);
+        hand.initHand();
         hand.updateHandDisplay();
+
         /*
         const cardsInHand = [];
 
