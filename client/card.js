@@ -278,7 +278,7 @@ class Card {
         // Override previous card data with new card data
         let data = card.cardData[name];
         card.cardInfo = data;
-
+        card.cardName = name;
         card.nameTxt.text = name;
         card.setAbilityText(data.ability);
         card.atkTxt.text = data.atk;

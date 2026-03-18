@@ -5,19 +5,21 @@ import {
 } from './misc.js'
 
 class MulliganButton {
-    constructor(scene, x, y, mulligan, cardName) {
+    constructor(scene, x, y, mulligan, card) {
         const button = this;
         button.scene = scene;
         button.x = x;
         button.y = y;
         button.mulligan = mulligan;
-        button.cardName = cardName;
+        button.card = card;
         button.initButton();
     }
 
     initButton() {
         const button = this;
         const scene = button.scene;
+        const tempDeck = scene.player.tempDeck;
+        const hand = scene.player.hand;
 
         button.container = scene.add.container(button.x, button.y);
 
@@ -31,7 +33,17 @@ class MulliganButton {
         // When the button is clicked, add one copy of the currently selected card to the player's deck
         button.rect.on("pointerdown", () => {
             // swap card
-            console.log(`Swapped card named ${button.cardName}`);
+            let prevCardName = button.card.cardName;
+            tempDeck.addCard(prevCardName);
+            hand.cardsInHand.removeCard(prevCardName);
+            let chosenCard = tempDeck.draw();
+            hand.cardsInHand.addCard(chosenCard);
+
+            button.card.changeCard(chosenCard);
+            console.log(`Swapped card from ${prevCardName} to ${chosenCard}`);
+            console.log(`Temp deck size: ${tempDeck.size}`)
+            button.container.setVisible(false);
+
         })
 
         // Allow the button to respond to click events
@@ -39,13 +51,49 @@ class MulliganButton {
         console.log("Initialised add card button");
     }
 }
+
+class MulliganCompleteButton {
+    constructor(scene, x, y, mulligan) {
+        const button = this;
+        button.scene = scene;
+        button.x = x;
+        button.y = y;
+        button.mulligan = mulligan;
+        button.initButton();
+    }
+
+    initButton() {
+        const button = this;
+        const scene = button.scene;
+
+        button.container = scene.add.container(button.x, button.y);
+
+        button.rect = scene.add.rectangle(0, 0, 150, 75, 0x32cd32, 1).setOrigin(0.5, 0.5);
+        button.rect.setStrokeStyle(2, 0x000000, 1);
+        button.container.add(button.rect);
+
+        button.nameText = scene.add.text(0, 0, "CONFIRM", { color: 'black', fontFamily: 'Pixelated', fontSize: '12px' }).setOrigin(0.5, 0.5);
+        button.container.add(button.nameText);
+
+        // When the button is clicked, add one copy of the currently selected card to the player's deck
+        button.rect.on("pointerdown", () => {
+            // swap card
+            scene.confirmMulligan();
+        })
+
+        // Allow the button to respond to click events
+        button.rect.setInteractive();
+        console.log("Initialised add card button");
+    }
+}
+
 class Mulligan {
     constructor(scene, player) {
         const mulligan = this;
         mulligan.scene = scene;
         mulligan.player = player;
         mulligan.cardObjects = [];
-        mulligan.mulliganButtons = [];
+        mulligan.buttons = [];
         mulligan.container = scene.add.container(400, 300);
         console.log(`Successfully initialised mulligan of player named ${player.name}`)
     }
@@ -89,17 +137,25 @@ class Mulligan {
         console.log("Sorting cards in hand by mana before displaying...");
         cardNames = sortByMana(cardNames, mulligan.scene.cardDatabase);
 
+        let completeButton = new MulliganCompleteButton(hand.scene, 0, 200, mulligan);
+        mulligan.container.add(completeButton.container);
+        mulligan.buttons.push(completeButton);
+
         cardNames.forEach((cardName) => {
             console.log(`Card name is ${cardName}`)
             let numCopies = hand.cardsInHand.getNumCopies(cardName);
             for (let i = 0; i < numCopies; i++) {
                 count += 1;
                 // Offset cards so that they are centred
-                let xOffset = -300 + ((count - 1) / (size - 1)) * 600
+                let xOffset = -300 + ((count - 1) / (size - 1)) * 600;
+
                 var card = new Card(hand.scene, xOffset, 0, cardName, scale);
                 mulligan.container.add(card.container);
-                var button = new MulliganButton(hand.scene, xOffset, 125, mulligan, cardName);
+                mulligan.cardObjects.push(card);
+
+                var button = new MulliganButton(hand.scene, xOffset, 125, mulligan, card);
                 mulligan.container.add(button.container);
+                mulligan.buttons.push(button);
             }
         })
     }

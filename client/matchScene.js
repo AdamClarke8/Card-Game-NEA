@@ -143,6 +143,35 @@ class MatchScene extends Phaser.Scene {
     update() {
 
     }
+
+    confirmMulligan() {
+        const scene = this;
+
+        scene.player = scene.registry.get('player');
+        const player = scene.player;
+        const mulligan = player.mulligan;
+
+        mulligan.cardObjects.forEach((cardObj) => {
+            console.log(cardObj.container);
+            cardObj.container.destroy();
+        })
+
+        mulligan.buttons.forEach((button) => {
+            button.container.destroy();
+        })
+
+
+        scene.startGame();
+    }
+
+    startGame() {
+        const scene = this;
+        const player = scene.player;
+        const hand = player.hand;
+
+        hand.updateHandDisplay();
+
+    }
 }
 
 export default MatchScene;
