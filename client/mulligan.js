@@ -71,16 +71,13 @@ class Mulligan {
         }
         */
 
-        let cardNames = Object.keys(hand.cardsInHand);
+        let cardNames = Object.keys(hand.cardsInHand.cards);
 
 
-        let size = 0;
-        cardNames.forEach((cardName) => {
-            size += hand.cardsInHand[cardName];
-        })
+        let size = hand.cardsInHand.size;
 
         if (size != 5) {
-            throw `Expected 5 cards in temp deck of player ${mulligan.player.name}: got ${size}`
+            throw `Expected 5 cards in hand of player ${mulligan.player.name}: got ${size}`
         }
 
         console.log(`Size of hand is ${size}`);
@@ -94,7 +91,7 @@ class Mulligan {
 
         cardNames.forEach((cardName) => {
             console.log(`Card name is ${cardName}`)
-            let numCopies = hand.cardsInHand[cardName];
+            let numCopies = hand.cardsInHand.getNumCopies(cardName);
             for (let i = 0; i < numCopies; i++) {
                 count += 1;
                 // Offset cards so that they are centred

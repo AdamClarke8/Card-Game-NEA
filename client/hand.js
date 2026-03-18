@@ -3,13 +3,77 @@ import Card from './card.js'
 import {
     sortByMana
 } from './misc.js'
+
+class CardsInHand {
+    constructor(scene, player) {
+        const cardsInHand = this;
+        cardsInHand.scene = scene;
+        cardsInHand.player = player;
+        cardsInHand.size = 0;
+        cardsInHand.cards = {};
+    }
+
+
+    addCard(name, count = 1) {
+        // If the card does not exist in the player's hand, add it as a new key-value pair
+        if (this.cards[name] == undefined) {
+            this.cards[name] = count;
+        }
+        else {
+            this.cards[name] += count;
+        }
+        console.log(`Added ${count} copies of card named ${name} to hand of ${this.player.name}`)
+        this.size += count;
+    }
+
+    removeCard(name, count = 1) {
+        // If the card does not exist in the player's hand, throw an error
+        if (this.cards[name] == undefined) {
+            throw `Card ${name} not found in deck of Player ${this.player.name}`;
+        }
+        // Otherwise, if there are not enough copies to remove, throw an error
+        else if (this.cards[name] - count < 0) {
+            throw `Failed to remove ${count} copies of Card ${name} from hand of Player ${this.player.name}`;
+        }
+        else {
+            this.cards[name] -= count;
+        }
+        this.size -= count;
+
+        console.log(`Removed ${count} copies of card named ${name} from hand of ${this.player.name}`)
+    }
+
+    setNumCopies(name, count) {
+        let diff = (count - this.cards[name]);
+        this.size += diff;
+        this.cards[name] = count;
+        console.log(`Set copies of card named ${name} in hand of ${this.player.name} to ${count}`)
+
+    }
+
+    getNumCopies(name) {
+        if (this.cards[name]) {
+            return this.cards[name];
+        }
+        return 0;
+    }
+
+    displayHand() {
+        console.log(`\nHand of player ${this.player.name}:\n`);
+        // Display each card in the player's deck and number of copies for each card
+        for (const [key, val] of Object.entries(this.cards)) {
+            console.log(`${key}: ${val}`);
+        }
+        console.log(`\n`)
+    }
+}
 class Hand {
     constructor(scene, player) {
         console.log(`Initialising hand of player named ${player.name}`);
         const hand = this;
         hand.scene = scene;
         hand.player = player;
-        hand.cardsInHand = {};
+        hand.cardsInHand = new CardsInHand(scene, player);
         hand.cardObjects = [];
         hand.container = scene.add.container(400, 525);
         console.log(`Successfully initialised hand of player named ${player.name}`)
@@ -18,6 +82,7 @@ class Hand {
     initHand() {
         const hand = this;
         const tempDeck = hand.player.tempDeck;
+
         console.log(`Initialising cards for mulligan of player named ${hand.player.name}`)
 
         let size = tempDeck.size;
@@ -29,13 +94,7 @@ class Hand {
 
         for (let i = 0; i < 5; i++) {
             let chosenCard = tempDeck.draw();
-            if (hand.cardsInHand[chosenCard] == undefined) {
-                hand.cardsInHand[chosenCard] = 1;
-            }
-            else {
-                hand.cardsInHand[chosenCard] += 1;
-            }
-            //hand.cardsInHand.push(chosenCard);
+            hand.cardsInHand.addCard(chosenCard);
         }
     }
 
@@ -59,17 +118,13 @@ class Hand {
             console.log("No cards in hand to destroy");
         }
 
-        let cardNames = Object.keys(hand.cardsInHand);
+        let cardNames = Object.keys(hand.cardsInHand.cards);
 
         if (!cardNames) {
             return;
         }
 
-        let size = 0;
-        cardNames.forEach((cardName) => {
-            size += hand.cardsInHand[cardName];
-        })
-
+        let size = hand.cardsInHand.size;
         console.log(`Size of hand is ${size}`);
 
         let count = 0;
@@ -81,7 +136,7 @@ class Hand {
 
         cardNames.forEach((cardName) => {
             console.log(`Card name is ${cardName}`)
-            let numCopies = hand.cardsInHand[cardName];
+            let numCopies = hand.cardsInHand.getNumCopies(cardName);
             for (let i = 0; i < numCopies; i++) {
                 count += 1;
                 // Offset cards so that they are centred
