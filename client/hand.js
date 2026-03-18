@@ -18,7 +18,7 @@ class Hand {
     initHand() {
         const hand = this;
         const tempDeck = hand.player.tempDeck;
-        console.log(`Initialising hand of player named ${hand.player.name}`)
+        console.log(`Initialising cards for mulligan of player named ${hand.player.name}`)
 
         let size = tempDeck.size;
         if (size < 5) {
@@ -59,14 +59,12 @@ class Hand {
             console.log("No cards in hand to destroy");
         }
 
-        //const cardNames = hand.cardsInHand;
         let cardNames = Object.keys(hand.cardsInHand);
 
         if (!cardNames) {
             return;
         }
 
-        //let size = cardNames.length;
         let size = 0;
         cardNames.forEach((cardName) => {
             size += hand.cardsInHand[cardName];
@@ -93,7 +91,6 @@ class Hand {
                 else {
                     var card = new Card(hand.scene, -200 + ((count - 1) / (size - 1)) * 400, 0, cardName, scale);
                 }
-                //hand.cardsInHand.push(card);
                 hand.container.add(card.container);
             }
         })

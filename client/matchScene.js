@@ -12,6 +12,7 @@ import ZoomTexture from './zoomTexture.js'
 
 import CardSlot from './cardSlot.js'
 import Hand from './hand.js'
+import Mulligan from './mulligan.js'
 
 // Scene to display the player's collection
 class MatchScene extends Phaser.Scene {
@@ -46,13 +47,16 @@ class MatchScene extends Phaser.Scene {
 
         this.load.font('Pixelated', fontPixelated, 'woff2');
     }
+
     create() {
         const scene = this;
-
+     
         scene.player = scene.registry.get('player');
-        const collection = scene.player.collection;
-        const deck = scene.player.deck;
-        scene.player.initTempDeck();
+        const player = scene.player;
+
+        const collection = player.collection;
+        const deck = player.deck;
+        player.initTempDeck();
 
         console.log("Displaying deck...");
         deck.displayDeck();
@@ -61,7 +65,7 @@ class MatchScene extends Phaser.Scene {
         // Create a new instance of a zoom texture
         scene.rt = new ZoomTexture(this, 400, 300, 800, 600);
 
-        const card = new Card(scene, 100, 200, "duckling", 0.125);
+        //const card = new Card(scene, 100, 200, "duckling", 0.125);
 
         const blueCardSlotVertices = [[100, 200], [250, 200], [400, 200], [550, 200], [700, 200]];
         const redCardSlotVertices = [[100, 400], [250, 400], [400, 400], [550, 400], [700, 400]];
@@ -82,9 +86,15 @@ class MatchScene extends Phaser.Scene {
             cardSlots.push(cardSlot);
         }
 
-        const hand = new Hand(scene, scene.player);
+        player.hand = new Hand(scene, player);
+        player.mulligan = new Mulligan(scene, player);
+
+        const hand = player.hand;
+        const mulligan = player.mulligan;
+
         hand.initHand();
-        hand.updateHandDisplay();
+        mulligan.initMulliganDisplay();
+        //hand.updateHandDisplay();
 
         /*
         const cardsInHand = [];
@@ -122,13 +132,14 @@ class MatchScene extends Phaser.Scene {
         var width = text.style.wrapWidth;
         text.setWrapWidth(width);
         */
-        
+
         this.backButton = this.add.text(400, 100, "BACK", { color: 'black', fontFamily: 'Pixelated', fontSize: '48px' }).setOrigin(0.5, 0.5);
         this.backButton.on("pointerdown", () => {
             scene.scene.start('home');
         })
         this.backButton.setInteractive();
     }
+
     update() {
 
     }
