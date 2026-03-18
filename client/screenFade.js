@@ -3,7 +3,7 @@ class ScreenFade {
         const screenFade = this;
         screenFade.graphics = scene.add.graphics();
 
-        screenFade.graphics.fillStyle(0x000000, 0.5);
+        screenFade.graphics.fillStyle(0x000000, 0.6);
         screenFade.graphics.fillRect(0, 0, 800, 600);
 
         if (show) {

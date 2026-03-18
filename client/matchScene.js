@@ -71,26 +71,28 @@ class MatchScene extends Phaser.Scene {
         const blueCardSlotVertices = [[100, 200], [250, 200], [400, 200], [550, 200], [700, 200]];
         const redCardSlotVertices = [[100, 400], [250, 400], [400, 400], [550, 400], [700, 400]];
 
-        const cardSlots = [];
+        scene.cardSlots = [];
 
         for (let i = 0; i < blueCardSlotVertices.length; i++) {
             let vertex = blueCardSlotVertices[i];
             console.log(`Creating blue side vertex at: ${vertex}`);
             let cardSlot = new CardSlot(vertex[0], vertex[1], scene);
-            cardSlots.push(cardSlot);
+            scene.cardSlots.push(cardSlot);
         }
 
         for (let i = 0; i < redCardSlotVertices.length; i++) {
             let vertex = redCardSlotVertices[i];
             console.log(`Creating red side vertex at: ${vertex}`);
             let cardSlot = new CardSlot(vertex[0], vertex[1], scene);
-            cardSlots.push(cardSlot);
+            scene.cardSlots.push(cardSlot);
         }
 
+        /*
         // Merge all card slots with background
-        cardSlots.forEach((cardSlot) => {
+        scene.cardSlots.forEach((cardSlot) => {
             cardSlot.container.setToBack();
         })
+        */
 
         player.hand = new Hand(scene, player);
         player.mulligan = new Mulligan(scene, player);
@@ -142,6 +144,30 @@ class MatchScene extends Phaser.Scene {
 
         hand.updateHandDisplay();
 
+
+        hand.cardObjects.forEach((cardObj) => {
+            let container = cardObj.container;
+            let rect = cardObj.bg;
+            let width = rect.displayWidth;
+            let height = rect.displayHeight;
+            console.log(`${cardObj.cardName} ${container} ${rect} ${width} ${height}`)
+            container.setInteractive(new Phaser.Geom.Rectangle(width * -0.5, height * -0.5, width, height), Phaser.Geom.Rectangle.Contains);
+            scene.input.setDraggable(container);
+            //scene.input.enableDebug(container);
+        });
+
+        scene.input.on('drag', (pointer, gameObject, x, y) => {
+            gameObject.x = x;
+            gameObject.y = y;
+        });
+
+        scene.input.on('dragend', (pointer, gameObject, x, y) => {
+            let origX = gameObject.input.dragStartX;
+            let origY = gameObject.input.dragStartY;
+            gameObject.x = origX;
+            gameObject.y = origY;
+            gameObject.setToTop();
+        })
     }
 }
 

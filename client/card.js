@@ -70,19 +70,32 @@ class Card {
         card.x_temp = x;
         card.y_temp = y;
 
+        let width = card.bg.displayWidth;
+        let height = card.bg.displayHeight;
+
+        // Allow the card's container to respond to click events
+        card.container.setInteractive(new Phaser.Geom.Rectangle(width * -0.5, height * -0.5, width, height), Phaser.Geom.Rectangle.Contains);
+
         // When this card is clicked while hidden, show its ability
-        card.bg.on("pointerdown", () => {
+        card.container.on("pointerup", (pointer) => {
+
+            // Negate if attempting to drag (mouse's distance from pointerdown position is beyond the threshold)
+            let distance = pointer.getDistance();
+
+            if (distance > 4) {
+                return;
+            }
+
             if (card.isHidden()) {
                 card.showAbility();
             }
         })
-        // Allow the card's background to respond to click events
-        card.bg.setInteractive();
 
         // Initially hide the card when first created
         if (abilityHidden) {
             card.hideAbility();
         }
+
         console.log("Card successfully created");
     }
 

@@ -60,7 +60,6 @@ class HomeScene extends Phaser.Scene {
     
     create() {
         const scene = this;
-
         this.cardDatabase = new CardDatabase(this);
 
         // Only execute this if the scene has been visited once

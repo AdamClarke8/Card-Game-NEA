@@ -147,6 +147,7 @@ class Hand {
                     var card = new Card(hand.scene, -200 + ((count - 1) / (size - 1)) * 400, 0, cardName, scale);
                 }
                 hand.container.add(card.container);
+                hand.cardObjects.push(card);
             }
         })
     }
