@@ -9,6 +9,7 @@ import Deck from "./deck.js"
 import Collection from "./collection.js"
 import Card from './card.js'
 import ZoomTexture from './zoomTexture.js'
+import ScreenFade from './screenFade.js'
 
 import CardSlot from './cardSlot.js'
 import Hand from './hand.js'
@@ -58,12 +59,12 @@ class MatchScene extends Phaser.Scene {
         const deck = player.deck;
         player.initTempDeck();
 
-        console.log("Displaying deck...");
         deck.displayDeck();
         // Initialise card database
         scene.cardDatabase = new CardDatabase(scene);
         // Create a new instance of a zoom texture
         scene.rt = new ZoomTexture(this, 400, 300, 800, 600);
+        scene.screenFade = new ScreenFade(this, false);
 
         //const card = new Card(scene, 100, 200, "duckling", 0.125);
 
@@ -86,52 +87,21 @@ class MatchScene extends Phaser.Scene {
             cardSlots.push(cardSlot);
         }
 
+        // Merge all card slots with background
+        cardSlots.forEach((cardSlot) => {
+            cardSlot.container.setToBack();
+        })
+
         player.hand = new Hand(scene, player);
         player.mulligan = new Mulligan(scene, player);
 
         const hand = player.hand;
         const mulligan = player.mulligan;
 
+        scene.screenFade.show();
         hand.initHand();
         mulligan.initMulliganDisplay();
         //hand.updateHandDisplay();
-
-        /*
-        const cardsInHand = [];
-
-        let count = 0;
-        let cardNames = Object.keys(deck.cards);
-
-        cardNames.forEach((cardName) => {
-            count += 1;
-            
-            let card = new Card(scene, 100 + count * 50, 550, cardName, 0.2);
-            cardsInHand.push(card);
-        })*/
-
-        /*
-        // Splash text when starting game
-        const text = this.add.rexBBCodeText({
-            x: 400,
-            y: 300,
-            text: "MATCH SCENE",
-            style: {
-                fontFamily: 'Pixelated',
-                color: 'black',
-                fontSize: '32px',
-                wrap: {
-                    mode: 'word',
-                    width: 800
-                }
-            }
-        }).setOrigin(0.5, 0.5);
-        // Place text at the centre
-
-        var mode = text.style.wrapMode;
-        text.setWrapMode(mode);
-        var width = text.style.wrapWidth;
-        text.setWrapWidth(width);
-        */
 
         this.backButton = this.add.text(400, 100, "BACK", { color: 'black', fontFamily: 'Pixelated', fontSize: '48px' }).setOrigin(0.5, 0.5);
         this.backButton.on("pointerdown", () => {
@@ -160,6 +130,7 @@ class MatchScene extends Phaser.Scene {
             button.container.destroy();
         })
 
+        scene.screenFade.hide();
 
         scene.startGame();
     }
