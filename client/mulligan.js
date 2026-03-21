@@ -102,23 +102,6 @@ class Mulligan {
         const mulligan = this;
         const hand = mulligan.player.hand;
 
-        console.log(`Destroying existing cards in mulligan display of player named ${mulligan.player.name}`)
-
-        /*
-        // Destroy the existing cards in the user's mulligan display
-        if (mulligan.cardObjects.length > 0) {
-            // If there are cards in the hand to destroy, iterate through them...
-            mulligan.cardObjects.forEach((cardObj) => {
-                cardObj.destroy();
-                console.log(`Destroyed card named ${cardObj.cardName}`)
-            })
-            mulligan.cardObjects = [];
-        }
-        else {
-            console.log("No cards in hand to destroy");
-        }
-        */
-
         let cardNames = Object.keys(hand.cardsInHand.cards);
 
 
@@ -137,26 +120,40 @@ class Mulligan {
         console.log("Sorting cards in hand by mana before displaying...");
         cardNames = sortByMana(cardNames, mulligan.scene.cardDatabase);
 
+        // Add confirmation button
         let completeButton = new MulliganCompleteButton(hand.scene, 0, 200, mulligan);
         mulligan.container.add(completeButton.container);
         mulligan.buttons.push(completeButton);
 
+        // Load mulligan cards
         cardNames.forEach((cardName) => {
+
             console.log(`Card name is ${cardName}`)
             let numCopies = hand.cardsInHand.getNumCopies(cardName);
+
             for (let i = 0; i < numCopies; i++) {
                 count += 1;
                 // Offset cards so that they are centred
                 let xOffset = -300 + ((count - 1) / (size - 1)) * 600;
 
+                // Add card object to mulligan list
                 var card = new Card(hand.scene, xOffset, 0, cardName, scale);
+
                 mulligan.container.add(card.container);
                 mulligan.cardObjects.push(card);
 
+                // Add mulligan button under card object
                 var button = new MulliganButton(hand.scene, xOffset, 125, mulligan, card);
                 mulligan.container.add(button.container);
                 mulligan.buttons.push(button);
             }
+        })
+
+        // Make cards invisible for a short period of time (to prevent accidental click events)
+        mulligan.cardObjects.forEach((cardObj) => {
+
+            cardObj.container.setVisible(false);
+            setTimeout(() => { cardObj.container.setVisible(true) }, 25);
         })
     }
 

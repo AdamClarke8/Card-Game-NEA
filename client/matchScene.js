@@ -156,17 +156,63 @@ class MatchScene extends Phaser.Scene {
             //scene.input.enableDebug(container);
         });
 
-        scene.input.on('drag', (pointer, gameObject, x, y) => {
-            gameObject.x = x;
-            gameObject.y = y;
+        // Assign card as being dragged on dragstart
+        scene.input.on('dragstart', (pointer, gameObject) => {
+            if (gameObject.cardObj) {
+                scene.player.cardDragging = gameObject;
+            }
+        })
+
+        // Set card's position while being dragged
+        scene.input.on('drag', (pointer, gameObject, dragX, dragY) => {
+            if (gameObject.cardObj) {
+                let card = gameObject.cardObj;
+                card.move(pointer.x, pointer.y);
+            }
         });
 
-        scene.input.on('dragend', (pointer, gameObject, x, y) => {
-            let origX = gameObject.input.dragStartX;
-            let origY = gameObject.input.dragStartY;
-            gameObject.x = origX;
-            gameObject.y = origY;
-            gameObject.setToTop();
+        scene.input.on('dragend', (pointer, gameObject) => {
+            if (gameObject.cardObj) {
+                let origX = gameObject.input.dragStartX;
+                let origY = gameObject.input.dragStartY;
+
+                let dragX = pointer.x;
+                let dragY = pointer.y;
+
+                /*gameObject.x = origX;
+                gameObject.y = origY;*/
+                gameObject.cardObj.move(origX, origY, true);
+                gameObject.setToTop();
+
+                if (gameObject == scene.player.cardDragging) {
+                    let card = gameObject.cardObj;
+                    console.log(card.cardName);
+                    scene.player.cardDragging = undefined;
+
+                    console.log(`Pointer: x ${dragX} y ${dragY}`);
+                    for (let i = 0; i < scene.cardSlots.length; i++) {
+                        let cardSlot = scene.cardSlots[i];
+                        let container = cardSlot.container;
+                        let rect = cardSlot.bg;
+
+                        let width = rect.displayWidth;
+                        let height = rect.displayHeight;
+
+                        //console.log(`Width: ${width}, height: ${height}`)
+                        //console.log(`x: ${container.x}, y: ${container.y}`)
+
+                        // Create a new rectangle whose area equals that of the card slot's background
+                        let newRect = new Phaser.Geom.Rectangle(container.x - width * 0.5, container.y - height * 0.5, width, height);
+                        // Check if the pointer is within bounds of the card slot's hit area (rectangle)
+                        if (newRect.contains(dragX, dragY)) {
+                            console.log(`Card being dragged over card slot is named ${card.cardName}`);
+                            cardSlot.storeCard(card);
+                            break
+                        }
+                    }
+
+                }
+            }
         })
     }
 }

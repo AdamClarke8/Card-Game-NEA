@@ -33,10 +33,16 @@ class ZoomTexture {
 
         card.x_temp = card.x;
         card.y_temp = card.y;
+
+        // Move the card to the centre of the screen
+        card.move(400, 300, true);
+
+        /*
         card.x = 400;
         card.y = 300;
         // Update position of the card's container
         card.updateContainer();
+        */
 
         card.container.setScale(0.35);
         // Draw the container to the render texture as an image
@@ -68,10 +74,15 @@ class ZoomTexture {
             // Bring to back (lowest priority for click events)
             rt.rt.setToBack();
 
+            // Move the card back to its original position
+            /*
             card.x = card.x_temp;
             card.y = card.y_temp;
             // Update position of card's container
             card.updateContainer();
+            */
+
+            card.move(card.x_temp, card.y_temp, true);
 
             card.hideAbility();
         }

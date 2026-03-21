@@ -65,16 +65,21 @@ class Card {
         card.scale = scale;
 
         // Store location of card
+
         card.x = x;
         card.y = y;
         card.x_temp = x;
         card.y_temp = y;
+
 
         let width = card.bg.displayWidth;
         let height = card.bg.displayHeight;
 
         // Allow the card's container to respond to click events
         card.container.setInteractive(new Phaser.Geom.Rectangle(width * -0.5, height * -0.5, width, height), Phaser.Geom.Rectangle.Contains);
+
+        // Flag the container as belonging to this Card object
+        card.container.cardObj = card;
 
         // When this card is clicked while hidden, show its ability
         card.container.on("pointerup", (pointer) => {
@@ -365,6 +370,21 @@ class Card {
         const card = this;
         card.container.x = card.x;
         card.container.y = card.y;
+    }
+
+    move(x, y, absolute = false) {
+        const card = this;
+        // Move container to a new position
+        if (card.container.parentContainer && !absolute) {
+            card.x = x - card.container.parentContainer.x;
+            card.y = y - card.container.parentContainer.y;
+        }
+
+        else {
+            card.x = x;
+            card.y = y;
+        }
+        card.updateContainer();
     }
 }
 

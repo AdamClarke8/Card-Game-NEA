@@ -146,9 +146,16 @@ class Hand {
                 else {
                     var card = new Card(hand.scene, -200 + ((count - 1) / (size - 1)) * 400, 0, cardName, scale);
                 }
+
                 hand.container.add(card.container);
                 hand.cardObjects.push(card);
+
             }
+        })
+        // Make cards invisible for a short period of time (to prevent accidental click events)
+        hand.cardObjects.forEach((cardObj) => {
+            cardObj.container.setVisible(false);
+            setTimeout(() => { cardObj.container.setVisible(true) }, 50);
         })
     }
 }
