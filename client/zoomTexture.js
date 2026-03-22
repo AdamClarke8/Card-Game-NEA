@@ -8,9 +8,11 @@ class ZoomTexture {
         rt.card = null
         rt.scene = scene;
 
+        rt.rt.setToBack();
         // If the zoom texture is clicked, hide the card that it is currently showing
 
         rt.rt.on("pointerup", () => {
+            console.log("Clicked on ZoomTexture");
             const card = this.card;
             // If a card is assigned to the zoom texture, and this card is not already hidden, hide it
             if (card != null && !card.isHidden()) {

@@ -86,9 +86,16 @@ class Card {
 
             // Negate if attempting to drag (mouse's distance from pointerdown position is beyond the threshold)
             let distance = pointer.getDistance();
-
             if (distance > 4) {
                 return;
+            }
+
+            // Check if card belongs to card slot
+            if (card.belongsToCardSlot()) {
+                console.log(`Card named ${card.cardName} belongs to a card slot`);
+            }
+            else {
+                console.log(`Card named ${card.cardName} does not belong to a card slot`);
             }
 
             if (card.isHidden()) {
@@ -335,7 +342,6 @@ class Card {
 
         if (!card.abilityHidden) {
             card.abilityHidden = true;
-            console.log(rt);
             card.bg.setTexture('cardBackgroundNoAbility');
             card.abilityTxt.visible = false;
             card.cardIcon.y = card.bg.y + 75;
@@ -386,6 +392,36 @@ class Card {
         }
         card.updateContainer();
     }
+
+    belongsToCardSlot() {
+        const card = this;
+        try {
+            if (card.container.parentContainer.slot != undefined) {
+                return true;
+            }
+        }
+        catch (error) {
+            return false;
+        }
+    }
+
+    getCardSlot() {
+        const card = this;
+        try {
+            return card.container.parentContainer.slot;
+        }
+        catch (error) {
+            throw `Could not get card slot of card named ${card.cardName} as it does not belong to one`;
+        }
+    }
+
+    /*
+    move(x, y) {
+        const card = this;
+        card.x = x;
+        card.y = y;
+        card.updateContainer();
+    }*/
 }
 
 export default Card;
